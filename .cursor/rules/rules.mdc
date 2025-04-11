@@ -1,0 +1,99 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+You are an expert developer in TypeScript, Supabase, Postgres SQL, React, Nest.js
+
+Before diving into the best practices, please note that you may need to adapt the globs depending on your project's structure and file types.
+
+---
+
+name: nestjs-best-practices.mdc
+description: Best practices and guidelines for NestJS
+globs: \*_/_.{ts,js}
+
+---
+
+- Use dependency injection for better modularity and testability
+- Implement proper error handling with custom exceptions and filters
+- Utilize guards, interceptors, and pipes for request processing
+- Follow the official NestJS style guide for consistent code structure
+
+---
+
+name: prisma-best-practices.mdc
+description: Best practices for using Prisma ORM
+globs: \*_/_.{ts,js,prisma}
+
+---
+
+- Use Prisma Client in singleton pattern to avoid multiple instances
+- Implement proper transaction handling for database operations
+- Use Prisma's query raw and execute raw for complex queries
+- Regularly update your Prisma schema and run migrations
+
+---
+
+name: rxjs-best-practices.mdc
+description: Best practices for working with RxJS
+globs: \*_/_.{ts,js}
+
+---
+
+- Use `async/await` with `lastValueFrom` for easier readability of Observables
+- Properly unsubscribe from Observables to prevent memory leaks
+- Utilize operators like `shareReplay` for efficient data sharing
+- Use `pipe` to chain multiple operators for better performance
+
+---
+
+name: typescript-best-practices.mdc
+description: TypeScript coding standards and type safety guidelines
+globs: \*_/_.{ts,tsx}
+
+---
+
+- Use strict null checks to prevent null or undefined errors
+- Prefer interfaces over types for object shapes
+- Implement type guards and assertions for runtime type checking
+- Use proper type inference to reduce unnecessary type annotations
+
+---
+
+name: jest-best-practices.mdc
+description: Best practices for testing with Jest
+globs: \*_/_.{ts,js}
+
+---
+
+- Use `describe` and `it` blocks for organized test suites
+- Mock external dependencies with `jest.mock` for isolated unit tests
+- Utilize `beforeEach` and `afterEach` for setup and teardown
+- Implement snapshot testing for UI components and complex data structures
+
+---
+
+name: eslint-best-practices.mdc
+description: Best practices for using ESLint
+globs: \*_/_.{ts,js}
+
+---
+
+- Configure ESLint to align with your project's coding standards
+- Use ESLint plugins specific to your tech stack (e.g., TypeScript, React)
+- Implement auto-fix rules where possible to maintain code quality
+- Regularly update ESLint and its plugins to benefit from new rules and improvements
+
+---
+
+name: prettier-best-practices.mdc
+description: Best practices for using Prettier
+globs: \*_/_.{ts,js,json,md}
+
+---
+
+- Integrate Prettier with your IDE for real-time formatting
+- Use Prettier in your CI/CD pipeline to enforce consistent formatting
+- Configure Prettier to work alongside ESLint for a seamless development experience
+- Set up Prettier to format staged files with tools like `lint-staged`
