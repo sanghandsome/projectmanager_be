@@ -9,144 +9,111 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(dbgenerated("gen_random_uuid()"))
-  created_at  DateTime?        @default(now())
-  updated_at    DateTime?      @updatedAt 
-  deleted_at    DateTime?     
-  refresh_token  String?
-  user_name     String         @db.VarChar(50)
-  we_id         String         @db.VarChar(5)
-  full_name     String
-  sex           Sex
-  email         String         @unique
-  phone         String?        @db.VarChar(10)
-  discord_id    String?
-  password      String
-  date_of_birth DateTime?
-  otp            String?  
-  otp_expires_at DateTime? 
-  otp_attempts   Int      @default(0) 
-  notifications Notification[]
-  cfg_assignees CfgAssignee[]
-  teams     Team[]   @relation("TeamUsers")
-  roleId    Int       @default(2)
-  role      Role     @relation(fields: [roleId], references: [id])
-  userPermissions User_Permission[] // Mối quan hệ với bảng trung gian User_Permission
+  id              String        @id @default(dbgenerated("gen_random_uuid()"))
+  created_at      DateTime?     @default(now())
+  updated_at      DateTime?     @updatedAt
+  deleted_at      DateTime?
+  refresh_token   String?
+  we_id           String        @db.VarChar(5)
+  full_name       String
+  sex             Sex
+  email           String        @unique
+  phone           String?       @db.VarChar(10)
+  discord_id      String?
+  password        String
+  date_of_birth   DateTime?
+  otp             String?
+  otp_expires_at  DateTime?
+  otp_attempts    Int           @default(0)
 
-  @@index([roleId]) // Tạo chỉ mục cho khóa ngoại
+  notifications   Notification[]
+  teams           Team[]
+  tasks          Task[]
+  role_id         Int           @default(1)
+  role            Role          @relation(fields: [role_id], references: [id])
+  permissions     Permission[]
+
+  assignedTasks Task[] @relation("AssignedTasks")
+  reportedTasks Task[] @relation("ReportedTasks")
+
+  @@index([email])
 }
 
 model Role {
-  id          Int      @id @default(autoincrement())
-  name        String
-  users       User[]   // Mối quan hệ 1-n với User
-  rolePermissions Role_Permission[] // Mối quan hệ với bảng trung gian
-
-  @@unique([name]) // Đảm bảo tên vai trò duy nhất
+  id           Int        @id @default(autoincrement())
+  name         String     @unique
+  users        User[]     // Một role có thể có nhiều user
+  permissions  Permission[]
 }
 
 model Permission {
   id             Int      @id @default(autoincrement())
   name           String
-  userPermissions User_Permission[] // Mối quan hệ n-n qua User_Permission
-  rolePermissions Role_Permission[]
+  users          User[]   // Mối quan hệ nhiều-nhiều với User
+  roles          Role[]   // Mối quan hệ nhiều-nhiều với Role
+
   @@unique([name]) // Đảm bảo tên quyền duy nhất
 }
 
-// Bảng trung gian cho mối quan hệ n-n giữa Role và Permission
-model Role_Permission {
-  roleId       Int
-  permissionId Int
-  role         Role     @relation(fields: [roleId], references: [id])
-  permission   Permission @relation(fields: [permissionId], references: [id])
-
-  @@id([roleId, permissionId]) // Khóa chính là tổ hợp của hai khóa ngoại
-  @@index([roleId]) // Tạo chỉ mục cho hiệu suất
-  @@index([permissionId])
-}
-
-// Bảng trung gian cho mối quan hệ n-n giữa User và Permission
-model User_Permission {
-  userId       String
-  permissionId Int
-  user         User     @relation(fields: [userId], references: [id])
-  permission   Permission @relation(fields: [permissionId], references: [id])
-
-  @@id([userId, permissionId]) // Khóa chính là tổ hợp của hai khóa ngoại
-  @@index([userId]) // Tạo chỉ mục cho hiệu suất
-  @@index([permissionId])
-}
-
 model Team {
-  id           String    @id @default(dbgenerated("gen_random_uuid()"))
-  created_at  DateTime?        @default(now())
-  updated_at    DateTime?      @updatedAt 
-  deleted_at    DateTime?     
-  team_name    String           @unique
+  id                String         @id @default(dbgenerated("gen_random_uuid()"))
+  created_at        DateTime?      @default(now())
+  updated_at        DateTime?      @updatedAt 
+  deleted_at        DateTime?     
+  team_name         String         @unique
   discord_channel_id String?
-  notifications Notification[]
-  cfg_tasks    CfgTask[]
-  users     User[]   @relation("TeamUsers")
+  notifications     Notification[]
+  tasks             Task[]         // Mối quan hệ nhiều-nhiều với Task
+  users             User[]         // Mối quan hệ nhiều-nhiều với User
 }
 
 model Notification {
   id               String    @id @default(dbgenerated("gen_random_uuid()"))
-  created_at    DateTime?     @default(now())
-  updated_at    DateTime?      @updatedAt 
-  deleted_at    DateTime?      
+  created_at       DateTime? @default(now())
+  updated_at       DateTime? @updatedAt 
+  deleted_at       DateTime?      
   user_id          String?
   message          String?
   team_id          String?
-  unread           Boolean  @default(true)
+  unread           Boolean   @default(true)
   user             User?     @relation(fields: [user_id], references: [id])
   team             Team?     @relation(fields: [team_id], references: [id])
 }
 
 model Task {
-  id           String    @id @default(dbgenerated("gen_random_uuid()"))
-  created_at   DateTime   @default(now())
-  delete_at    DateTime?
-  assignee     String?
-  date_start   DateTime @db.Timestamptz
-  date_end     DateTime @db.Timestamptz
-  task_name    String
-  description  String?
-  statement    String?
-  team         String?
-  reporter     String?
-  cfg_tasks    CfgTask[]
-  cfg_assignees CfgAssignee[]
-  cfg_statement CfgStatement? @relation(fields: [statement], references: [id])
+  id             String        @id @default(dbgenerated("gen_random_uuid()"))
+  created_at     DateTime      @default(now())
+  updated_at     DateTime?     @updatedAt 
+  delete_at      DateTime?
+  assignee_id    String?
+  reporter_id    String
+  date_start     DateTime      @db.Timestamptz
+  date_end       DateTime      @db.Timestamptz
+  task_name      String
+  description    String?
+  statement      String?
+  users          User[]        // Nhiều người dùng liên quan đến Task (nhiều-nhiều)
+  teams          Team[]        // Nhiều team liên quan đến Task (nhiều-nhiều)
+  cfg_statement  CfgStatement? @relation(fields: [statement], references: [id])
+  
+  assignee       User?         @relation("AssignedTasks", fields: [assignee_id], references: [id])
+  reporter       User?         @relation("ReportedTasks", fields: [reporter_id], references: [id])
 }
 
 model CfgStatement {
   id          String  @id @default(dbgenerated("gen_random_uuid()"))
-  status      String?
-  color       String?
+  status      String
   description String?
-  tasks       Task[]
-}
-
-model CfgTask {
-  id_team String
-  id_task String
-  team    Team?  @relation(fields: [id_team], references: [id])
-  task    Task?  @relation(fields: [id_task], references: [id])
-
-  @@id([id_team, id_task])
-}
-
-model CfgAssignee {
-  id_user String
-  id_task String
-  user    User?  @relation(fields: [id_user], references: [id])
-  task    Task?  @relation(fields: [id_task], references: [id])
-
-  @@id([id_user, id_task])
+  tasks       Task[]  // Mối quan hệ một-nhiều với Task
 }
 
 enum Sex {
   Male
   Female
   Other
+}
+
+enum RoleInTask {
+  ASSIGNEE
+  REPORTER
 }

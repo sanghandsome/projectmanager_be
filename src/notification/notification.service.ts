@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UsersService } from 'src/users/users.service';
 import { TeamService } from 'src/team/team.service';
 import { MailService } from 'src/mail/mail.service';
+import { TaskService } from 'src/task/task.service';
 
 @Injectable()
 export class NotificationService {
@@ -13,6 +14,7 @@ export class NotificationService {
     private readonly userService: UsersService,
     private readonly teamService: TeamService,
     private readonly mailService: MailService,
+    private readonly taskService: TaskService,
   ) {}
 
   async createNotification(data: {
@@ -114,20 +116,58 @@ export class NotificationService {
     );
   }
 
+  //Thông báo Task mới
+
   //Thông báo về email người dùng được giao việc
-  async messageSendTaskToAssigned(userID: string, taskID: string) {}
+  async messageSendTaskToAssigned(userID: string, taskID: string) {
+    const task = await this.taskService.getTaskByID(taskID);
+    const user = await this.userService.getUserById(userID);
+    await this.mailService.sendTaskAssignedNotification(
+      user.email,
+      user.full_name,
+      task.task_name,
+    );
+  }
 
   //Thông báo người dùng sắp đến thời gian ban giao công việc
-  async messageSendTaskDeadline(userID: string, taskID: string) {}
+  async messageSendTaskDeadline(userID: string, taskID: string) {
+    const task = await this.taskService.getTaskByID(taskID);
+    const user = await this.userService.getUserById(userID);
+    await this.mailService.sendTaskDeadlineReminder(
+      user.email,
+      user.full_name,
+      task.task_name,
+      task.date_end,
+    );
+  }
 
   //Thông báo đến giờ bàn giao công việc
-  async messageSendHandOver(userID: string, taskID: string) {}
+  async messageSendHandOver(userID: string, taskID: string) {
+    const task = await this.taskService.getTaskByID(taskID);
+    const user = await this.userService.getUserById(userID);
+    await this.mailService.sendTaskHandOverReminder(
+      user.email,
+      user.full_name,
+      task.task_name,
+      task.date_end,
+    );
+  }
 
   //Thông báo đến leader người dùng này đa hoàn thành công việc
   async sendTaskCompletionNotificationToLeader(
     leaderID: string,
     taskID: string,
-  ) {}
+    userID: string,
+  ) {
+    const task = await this.taskService.getTaskByID(taskID);
+    const leader = await this.userService.getUserById(leaderID);
+    const user = await this.userService.getUserById(userID);
+    await this.mailService.sendTaskCompletionNotificationToLeader(
+      leader.email,
+      user.full_name,
+      task.task_name,
+    );
+  }
 
   async messagePasswordChangeNotification(userId: string) {
     const user = await this.userService.getUserById(userId);

@@ -30,14 +30,14 @@ export class TeamService {
           select: {
             id: true,
             full_name: true,
-            roleId: true,
+            role_id: true,
           },
         },
       },
     });
 
     const result = team.map((team) => {
-      const leader = team.users.find((user) => user.roleId === 3);
+      const leader = team.users.find((user) => user.role_id === 2);
       const memberCount = team.users.length;
 
       return {
@@ -59,6 +59,7 @@ export class TeamService {
         include: {
           users: {
             select: {
+              id: true,
               full_name: true,
               we_id: true,
             },

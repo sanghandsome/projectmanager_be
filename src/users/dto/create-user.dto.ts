@@ -13,10 +13,6 @@ import { Type } from 'class-transformer';
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  user_name: string;
-
-  @IsString()
-  @IsNotEmpty()
   we_id: string;
 
   @IsString()

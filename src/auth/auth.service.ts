@@ -130,7 +130,6 @@ export class AuthService {
       data: { password: hashedPassword },
       select: {
         id: true,
-        user_name: true,
         email: true,
         full_name: true,
       },

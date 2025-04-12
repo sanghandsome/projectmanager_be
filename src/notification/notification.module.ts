@@ -6,6 +6,7 @@ import { UsersModule } from 'src/users/users.module';
 import { TeamModule } from 'src/team/team.module';
 import { MailModule } from 'src/mail/mail.module';
 import { WebsocketModule } from 'src/websocket/websocket.module';
+import { TaskModule } from 'src/task/task.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { WebsocketModule } from 'src/websocket/websocket.module';
     MailModule,
     WebsocketModule,
     forwardRef(() => TeamModule),
+    forwardRef(() => TaskModule),
   ],
   controllers: [NotificationController],
   providers: [NotificationService, PrismaService],

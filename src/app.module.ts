@@ -11,6 +11,8 @@ import { WebsocketGateway } from './websocket/websocket.gateway';
 import { WebsocketModule } from './websocket/websocket.module';
 import { TeamModule } from './team/team.module';
 import { DiscordService } from './websocket/discord.service';
+import { TaskModule } from './task/task.module';
+import { CfgStatementModule } from './cfg-statement/cfg-statement.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { DiscordService } from './websocket/discord.service';
       },
     }),
     MailModule,
+    TaskModule,
+    CfgStatementModule,
   ],
   // controllers: [AppController],
   providers: [DiscordService],

@@ -40,7 +40,6 @@ export class UsersService {
       data: hashedData,
       select: {
         id: true,
-        user_name: true,
         email: true,
         full_name: true,
       },
@@ -60,7 +59,6 @@ export class UsersService {
       where: { deleted_at: null },
       select: {
         id: true,
-        user_name: true,
         we_id: true,
         full_name: true,
         sex: true,
@@ -78,7 +76,6 @@ export class UsersService {
       where: { deleted_at: { not: null } },
       select: {
         id: true,
-        user_name: true,
         we_id: true,
         full_name: true,
         sex: true,
@@ -98,7 +95,6 @@ export class UsersService {
       where: { id },
       select: {
         id: true,
-        user_name: true,
         we_id: true,
         full_name: true,
         sex: true,
@@ -130,7 +126,6 @@ export class UsersService {
       data: hashedData,
       select: {
         id: true,
-        user_name: true,
         email: true,
         full_name: true,
         discord_id: true,
@@ -160,7 +155,6 @@ export class UsersService {
       where: { id },
       select: {
         id: true,
-        user_name: true,
         email: true,
       },
     });
