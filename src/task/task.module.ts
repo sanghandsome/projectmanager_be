@@ -8,5 +8,6 @@ import { NotificationModule } from 'src/notification/notification.module';
   imports: [forwardRef(() => NotificationModule)],
   providers: [TaskService, PrismaService],
   controllers: [TaskController],
+  exports: [TaskService],
 })
 export class TaskModule {}

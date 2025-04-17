@@ -2,6 +2,8 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -14,6 +16,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 export class TaskService {
   constructor(
     private readonly prisma: PrismaService,
+    @Inject(forwardRef(() => NotificationService))
     private readonly notificationService: NotificationService,
   ) {}
   async getTaskByID(idTask: string) {
